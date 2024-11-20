@@ -251,14 +251,14 @@ st.subheader("Heatmap do Tamanho Comprimido")
 st.markdown("""
 O heatmap abaixo ilustra visualmente o tamanho comprimido dos arquivos de tamanho fixo, permitindo uma comparação rápida e intuitiva entre os diferentes tipos de dados.
 """)
-plot_compression_heatmap(fixed_stats)
+plot_compression_heatmap(fixed_stats)  
 
 # Seção 6: Tempo de Execução da Descompressão (Tamanho Fixo)
 st.subheader("Tempo de Execução da Descompressão")
 st.markdown("""
 Além da compressão, o tempo necessário para descomprimir os arquivos de tamanho fixo também é analisado. Isso é essencial para entender a eficiência total do algoritmo.
 """)
-plot_execution_time(fixed_stats, operation='decompression')
+plot_execution_time(fixed_stats, operation='decompression')    
 
 # Seções para Tamanho Variável
 st.header("Dados de Tamanho Variável")
