@@ -237,9 +237,87 @@ st.header("Análise dos Resultados")
 st.markdown("""
 Os resultados obtidos mostram que o algoritmo LZW é eficaz na compressão de diferentes tipos de dados, especialmente aqueles que contêm padrões repetitivos, como arquivos de texto e CSV. As imagens bitmap e arquivos de log apresentaram comportamentos variados: enquanto alguns arquivos apresentaram uma compressão eficaz, outros indicaram um aumento de tamanho.
 
-O tempo de execução da compressão e descompressão varia conforme o tipo de arquivo, sendo mais rápido para arquivos menores e com menos complexidade. As estatísticas do dicionário indicam a eficiência do algoritmo em gerenciar padrões repetitivos, com um crescimento controlado do dicionário durante o processo.
+O tempo de execução da compressão varia conforme o tipo de arquivo, sendo mais rápido para arquivos menores e com menos complexidade. As estatísticas do dicionário indicam a eficiência do algoritmo em gerenciar padrões repetitivos, com um crescimento controlado do dicionário durante o processo.
 
 Em geral, o LZW demonstra um bom equilíbrio entre eficiência de compressão, gerenciamento de memória e tempo de execução, tornando-o uma escolha adequada para diversas aplicações.
+""")
+
+# Seção: Explicação dos Métodos e Implementações
+st.header("Explicação dos Métodos e Implementações")
+st.markdown("""
+### Classe `TrieNode`
+
+- **Descrição:** Representa um único nó na estrutura de dados Trie (árvore de prefixo).
+- **Atributos:**
+  - `children` (dicionário): Mapeia caracteres para objetos `TrieNode`, representando os filhos do nó atual.
+  - `value` (int ou `None`): Código associado à string que termina neste nó.
+  - `is_end_of_word` (bool): Indica se o nó marca o final de uma palavra válida.
+- **Método `__init__`:**
+  - Inicializa os atributos com valores padrão: nenhum filho, valor `None` e `is_end_of_word` como `False`.
+
+### Classe `Trie`
+
+- **Descrição:** Implementa uma estrutura Trie para armazenamento e recuperação eficiente de strings.
+- **Atributos:**
+  - `root` (`TrieNode`): Nó raiz da Trie.
+  - `next_code` (int): Próximo código disponível para codificação de strings.
+- **Método `__init__`:**
+  - Inicializa a Trie com um nó raiz vazio e define `next_code` como 256 (códigos 0-255 reservados para caracteres ASCII).
+- **Método `insert(string)`:**
+  - Insere uma string na Trie.
+  - Percorre cada caractere da string, criando nós filhos se necessário.
+  - Ao final da string, marca o nó como `is_end_of_word` e atribui um código único.
+- **Método `search(string)`:**
+  - Busca uma string na Trie.
+  - Retorna o código associado se a string for encontrada como uma palavra completa; caso contrário, retorna `None`.
+- **Método `delete(string)`:**
+  - Remove uma string da Trie.
+  - Utiliza recursão para deletar nós que não são mais necessários após a remoção.
+- **Método `initialize_with_ascii()`:**
+  - Inicializa a Trie com todos os caracteres ASCII (0-255).
+  - Cada caractere é inserido como uma entrada individual com seu valor ASCII correspondente.
+
+### Funções de Compressão e Descompressão (`lzw_compress` e `lzw_decompress`)
+
+- **Descrição Geral:**
+  - Implementam os algoritmos de compressão e descompressão LZW, suportando modos estático e dinâmico de codificação.
+  - Utilizam a estrutura Trie para armazenar e buscar padrões de strings.
+  
+- **Função `lzw_compress(...)`:**
+  - **Parâmetros:**
+    - Caminhos para os arquivos de entrada e saída.
+    - Configurações como número máximo de bits, coleta de estatísticas e uso de código variável.
+  - **Processo:**
+    - Inicializa a Trie com caracteres ASCII.
+    - Lê o arquivo de entrada e percorre os símbolos para construir sequências.
+    - Dependendo do modo (variável ou estático), ajusta o tamanho dos códigos dinamicamente ou mantém um tamanho fixo.
+    - Armazena os códigos comprimidos no arquivo de saída.
+    - Coleta estatísticas de compressão, se solicitado.
+    
+- **Função `lzw_decompress(...)`:**
+  - **Parâmetros:**
+    - Caminhos para os arquivos de entrada comprimida e saída descomprimida.
+    - Configurações semelhantes às da função de compressão.
+  - **Processo:**
+    - Lê os dados comprimidos do arquivo de entrada.
+    - Inicializa o dicionário com caracteres ASCII.
+    - Decodifica os códigos para reconstruir a string original.
+    - Ajusta dinamicamente o tamanho dos códigos se o modo variável estiver ativo.
+    - Escreve a string descomprimida no arquivo de saída.
+    - Coleta estatísticas de descompressão, se solicitado.
+
+### Função `main()`
+
+- **Descrição:** Ponto de entrada principal para a execução do compressor e descompressor via linha de comando.
+- **Processo:**
+  - Utiliza `argparse` para parsear os argumentos fornecidos pelo usuário.
+  - Determina o modo de operação (compressão ou descompressão) e chama a função correspondente.
+  - Exibe estatísticas de operação se o modo de teste estiver habilitado.
+  - Trata exceções durante a descompressão, como códigos inválidos.
+
+---
+
+Esta implementação proporciona uma maneira eficiente de comprimir e descomprimir arquivos utilizando o algoritmo LZW, com a flexibilidade de ajustar o tamanho dos códigos e coletar estatísticas detalhadas sobre o processo.
 """)
 
 # Seção: Dados Brutos (opcional)
